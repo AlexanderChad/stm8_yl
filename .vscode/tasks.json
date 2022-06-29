@@ -1,0 +1,47 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: sdcc.exe сборка активного файла",
+            "command": "C:/Users/Alexander.Chad/.platformio/packages/toolchain-sdcc/bin/sdcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-mstm8",
+                ""
+            ],
+            "options": {
+                "cwd": "C:/Users/Alexander.Chad/.platformio/packages/toolchain-sdcc/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Задача создана отладчиком."
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Build",
+            "problemMatcher": [
+                "$platformio"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "label": "PlatformIO: Build"
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Upload",
+            "problemMatcher": [
+                "$platformio"
+            ],
+            "label": "PlatformIO: Upload"
+        }
+    ],
+    "version": "2.0.0"
+}
