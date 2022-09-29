@@ -27,8 +27,8 @@ uint32_t E_State_timer = 0;
 uint16_t Displ_data_raw = 0;
 uint8_t Displ_number = 0;
 
-#define RData_Timeout 1000
-#define Connect_Timeout 30000
+#define RData_Timeout 50
+#define Connect_Timeout 500
 
 uint32_t RDT_timer = 0;
 uint32_t ConnT_timer = 0;
@@ -43,9 +43,14 @@ void displ_data_update()
   Displ_data_raw = 0;
   if (Displ_number >= 100)
   {
-    Displ_data_raw = 1;
+    Displ_data_raw = 1; //рисуем сотни
   }
-  Displ_data_raw |= (num_d_db[Displ_number % 100 / 10] << 1) | (num_e_db[Displ_number % 10] << 9);
+  Displ_data_raw |= (num_e_db[Displ_number % 10] << 9); //рисуем единицы
+  // Displ_data_raw |= (num_d_db[Displ_number % 100 / 10] << 1) | (num_e_db[Displ_number % 10] << 9);
+  if (Displ_number > 9) //для вырезания нуля
+  {
+    Displ_data_raw |= (num_d_db[Displ_number % 100 / 10] << 1); //усли больше 9, то рисуем циру десятка числа
+  }
 }
 
 // the setup routine runs once when you press reset:
@@ -67,11 +72,11 @@ void setup()
   digitalWrite(shcp, LOW);
   digitalWrite(ds, LOW);
 
-  Serial_begin(9600);
+  Serial_begin(19200);
 
-  digitalWrite(dir485, HIGH);
-  delay(100);
-  Serial_println_s("YLed started!");
+  // digitalWrite(dir485, HIGH);
+  // delay(100);
+  // Serial_println_s("YLed started!");
   delay(100);
   digitalWrite(dir485, LOW);
 }
