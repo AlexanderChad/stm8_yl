@@ -38,6 +38,8 @@ uint8_t RData[3] = {0, 0, 0};
 uint8_t num_d_db[10] = {0b01111110, 0b00110000, 0b01101101, 0b01111001, 0b00110011, 0b01011011, 0b01011111, 0b01110000, 0b01111111, 0b01111011};
 uint8_t num_e_db[10] = {0b01111110, 0b00000110, 0b01011011, 0b01001111, 0b00100111, 0b01101101, 0b01111101, 0b01000110, 0b01111111, 0b01101111};
 
+uint8_t color_l = 0;
+
 void displ_data_update()
 {
   Displ_data_raw = 0;
@@ -49,7 +51,7 @@ void displ_data_update()
   // Displ_data_raw |= (num_d_db[Displ_number % 100 / 10] << 1) | (num_e_db[Displ_number % 10] << 9);
   if (Displ_number > 9) //для вырезания нуля
   {
-    Displ_data_raw |= (num_d_db[Displ_number % 100 / 10] << 1); //усли больше 9, то рисуем циру десятка числа
+    Displ_data_raw |= (num_d_db[Displ_number % 100 / 10] << 1); //если больше 9, то рисуем циру десятка числа
   }
 }
 
@@ -82,6 +84,10 @@ void setup()
 }
 void Refr_displ()
 {
+  digitalWrite(yl, LOW);
+  digitalWrite(rl, LOW);
+  digitalWrite(gl, LOW);
+  //отключили, обновляем
   digitalWrite(stcp, LOW);
   for (uint8_t dbit = 0; dbit < 16; dbit++)
   {
@@ -97,6 +103,20 @@ void Refr_displ()
     digitalWrite(shcp, HIGH);
   }
   digitalWrite(stcp, HIGH);
+  //теперь включаем цвет
+  if (color_l & (1 << yl_bit))
+  {
+    digitalWrite(yl, HIGH);
+  }
+  if (color_l & (1 << rl_bit))
+  {
+    digitalWrite(rl, HIGH);
+  }
+  if (color_l & (1 << gl_bit))
+  {
+    digitalWrite(gl, HIGH);
+  }
+  //включили
 }
 // the loop routine runs over and over again forever:
 void loop()
@@ -138,6 +158,8 @@ void loop()
   {
     if ((RData[0] ^ RData[1]) == RData[2])
     {
+      color_l = RData[0] & 0b111;
+      /*
       if (RData[0] & (1 << yl_bit))
       {
         digitalWrite(yl, HIGH);
@@ -162,6 +184,7 @@ void loop()
       {
         digitalWrite(gl, LOW);
       }
+      */
       if (RData[0] & (1 << e_state_bit))
       {
         E_State = 0xFF;
